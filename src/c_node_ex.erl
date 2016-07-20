@@ -19,8 +19,8 @@ other() ->
     c_node_call(other).
 
 c_node_call(Fun) ->
-    {ok, Host} = inet:gethostname(),
-    Node = list_to_atom("c1@" ++ Host),
+    %% {ok, Host} = inet:gethostname(),
+    Node = list_to_atom("cnode@127.0.0.1"),
     case net_kernel:connect(Node) of
         true ->
             {any, Node} ! {self(),{Fun, some_atom_param}},
