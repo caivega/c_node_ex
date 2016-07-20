@@ -1,5 +1,7 @@
 Erlang multithreaded C-node example code.
 
+modify with the long name, sname doesn't work sometimes.
+
 How to build:
 
 git clone https://github.com/apofiget/c_node_ex
