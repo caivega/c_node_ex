@@ -1,6 +1,6 @@
 Erlang multithreaded C-node example code.
 
-modify with the long name, sname doesn't work sometimes.
+modified working with the long name.
 
 How to build:
 
