@@ -5,6 +5,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 #include "erl_interface.h"
 #include "ei.h"
@@ -37,26 +39,42 @@ static short int get_fn_idx(char *);
 static void *message_read_loop(void *);
 
 int main(int argc, char **argv) {
+    struct in_addr addr;
     int port;                                /* Listen port number */
     int fd;                                  /* Socket descriptor */
     int listen;                              /* Listen socket */
     ErlConnect conn;                         /* Connection data */
     char *cookie;                            /* Erlang magic cookie */
+    char *sname;
 
     pthread_t thread;
     pthread_attr_t attr;
     thread_data_t *data;
     static int tidx = 0;
 
-    if (argc == 3)
+    if (argc == 4)
     {
-        port = atoi(argv[1]);
-        cookie = argv[2];
-    } else return -1;
+        sname = argv[1];
+        port = atoi(argv[2]);
+        cookie = argv[3];
+    } else {
+        printf("Usage: erl_c_node sname port cookie\n");
+        return -1;
+    }
+
+    char hostname[255];
+    gethostname(hostname, 255);
+
+    char full_name[255];
+    full_name[0] = '\0';
+    strncat(full_name,sname,255);
+    strncat(full_name,"@",255);
+    strncat(full_name,"127.0.0.1",255);
 
     erl_init(NULL, 0);
 
-    if (erl_connect_init(1, cookie, 0) == -1)
+    addr.s_addr = inet_addr("127.0.0.1");
+    if (erl_connect_xinit(hostname, sname, full_name, &addr, cookie, 0) == -1)
         erl_err_quit("erl_connect_init");
 
     if ((listen = my_listen(port)) <= 0)
