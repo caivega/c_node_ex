@@ -17,6 +17,6 @@ tests:
 	@rebar ct
 
 start:
-	ERL_LIBS=deps erl -pa ebin -sname c_node_ex -setcookie COOKIE
+	ERL_LIBS=deps erl -pa ebin -name c_node_ex@127.0.0.1 -setcookie COOKIE
 
 .PHONY: compile
